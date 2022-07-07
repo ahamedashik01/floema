@@ -1,0 +1,1 @@
+import pns from 'images/2.png'
