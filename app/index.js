@@ -1,3 +1,3 @@
-import img from 'images/2.png'
+import img from 'images/2.jpg'
 
 console.log(img)

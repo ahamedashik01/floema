@@ -48,24 +48,20 @@ module.exports = {
         }),
 
         new ImageMinimizerPlugin({
-            minimizerOptions: {
-                plugins: [
-                    // interlaced: Interlace gif for progressive rendering.
-                    ['gifsicle', { interlaced: true }],
-
-                    // progressive: Lossless conversion to progressive.
-                    ['jpegtran', { progressive: true }],
-
-                    // optimizationLevel (0-7): The optimization level 0 enables a set of
-                    // optimization operations that require minimal effort. There will be
-                    // no changes to image attributes like bit depth or color type, and no
-                    // recompression of existing IDAT datastreams. The optimization level
-                    // 1 enables a single IDAT compression trial. The trial chosen is what
-                    //  OptiPNG thinks it’s probably the most effective.
-                    ['optipng', { optimizationLevel: 8 }],
-                ],
+            minimizer: {
+                implementation: ImageMinimizerPlugin.imageminMinify,
+                options: {
+                    // Lossless optimization with custom option
+                    // Feel free to experiment with options for better result for you
+                    plugins: [
+                        ["gifsicle", { interlaced: true }],
+                        ["jpegtran", { progressive: true }],
+                        ["optipng", { optimizationLevel: 8 }],
+                    ],
+                },
             },
         }),
+
 
         new CleanWebpackPlugin(),
     ],
@@ -127,6 +123,12 @@ module.exports = {
             {
                 test: /\.(glsl|frag|vert)$/,
                 type: 'asset/source', // replaced raw-loader
+                exclude: /node_modules/,
+            },
+
+            {
+                test: /\.(glsl|frag|vert)$/,
+                loader: 'raw-loader',
                 exclude: /node_modules/,
             },
 
