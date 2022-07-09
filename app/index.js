@@ -1,1 +1,3 @@
-import pns from 'images/2.png'
+import img from 'images/2.png'
+
+console.log(img)

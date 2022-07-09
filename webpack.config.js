@@ -3,15 +3,15 @@ const webpack = require('webpack')
 
 const CopywebpackPlugin = require('copy-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
-const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+const ImageMinimizerPlugin = require("image-minimizer-webpack-plugin")
+const { CleanWebpackPlugin } = require("clean-webpack-plugin")
+const TerserPlugin = require('terser-webpack-plugin');
 
 const IS_DEVELOPMENT = process.env.NODE_ENV === 'dev'
 
 const dirApp = path.join(__dirname, 'app')
 const dirShared = path.join(__dirname, 'shared')
-const dirStyles = path.join(__dirname, 'style')
-const dirImages = path.join(__dirname, 'images')
-const dirVideos = path.join(__dirname, 'videos')
+const dirStyles = path.join(__dirname, 'styles')
 const dirNode = 'node_modules'
 
 module.exports = {
@@ -22,15 +22,12 @@ module.exports = {
     resolve: {
         modules: [
             dirApp,
-            dirImages,
             dirShared,
             dirStyles,
-            dirVideos,
             dirNode
         ]
     },
     plugins: [
-        new CleanWebpackPlugin(),
 
         new webpack.DefinePlugin({
             IS_DEVELOPMENT
@@ -42,13 +39,35 @@ module.exports = {
                     from: './shared',
                     to: ''
                 }
-            ]
+            ],
         }),
 
         new MiniCssExtractPlugin({
             filename: '[name].css',
             chunkFilename: '[id].css'
-        })
+        }),
+
+        new ImageMinimizerPlugin({
+            minimizerOptions: {
+                plugins: [
+                    // interlaced: Interlace gif for progressive rendering.
+                    ['gifsicle', { interlaced: true }],
+
+                    // progressive: Lossless conversion to progressive.
+                    ['jpegtran', { progressive: true }],
+
+                    // optimizationLevel (0-7): The optimization level 0 enables a set of
+                    // optimization operations that require minimal effort. There will be
+                    // no changes to image attributes like bit depth or color type, and no
+                    // recompression of existing IDAT datastreams. The optimization level
+                    // 1 enables a single IDAT compression trial. The trial chosen is what
+                    //  OptiPNG thinks it’s probably the most effective.
+                    ['optipng', { optimizationLevel: 8 }],
+                ],
+            },
+        }),
+
+        new CleanWebpackPlugin(),
     ],
 
     module: {
@@ -69,14 +88,17 @@ module.exports = {
                             publicPath: ''
                         }
                     },
+
                     {
                         loader: 'css-loader',
 
                     },
+
                     {
                         loader: 'postcss-loader',
 
                     },
+
                     {
                         loader: 'sass-loader'
                     }
@@ -87,11 +109,37 @@ module.exports = {
                 test: /\.(jpe?g|png|gif|svg|woff2?|fnt|webp)$/,
                 loader: 'file-loader',
                 options: {
-                    //     name(file) {
-                    //         return '[hash].[ext]'
-                    //     }
+                    name(file) {
+                        return '[hash].[ext]'
+                    }
                 }
-            }
+            },
+
+            {
+                test: /\.(jpe?g|png|gif|svg|webp)$/i,
+                use: [
+                    {
+                        loader: ImageMinimizerPlugin.loader,
+                    },
+                ],
+            },
+
+            {
+                test: /\.(glsl|frag|vert)$/,
+                type: 'asset/source', // replaced raw-loader
+                exclude: /node_modules/,
+            },
+
+            {
+                test: /\.(glsl|frag|vert)$/,
+                loader: 'glslify-loader',
+                exclude: /node_modules/,
+            },
         ]
-    }
+    },
+
+    optimization: {
+        minimize: true,
+        minimizer: [new TerserPlugin()],
+    },
 }
