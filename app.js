@@ -96,16 +96,17 @@ app.get('/', async (req, res) => {
 
   res.render('pages/home', {
     ...defaults,
+    home,
   });
 });
 
 app.get('/about', async (req, res) => {
   const api = await initApi(req);
-  const document = await client.getSingle('about')
-  console.log(api, document)
+  const defaults = await handleRequest(api);
 
   res.render('pages/about', {
-    document,
+    ...defaults,
+    about,
   });
 });
 
@@ -115,6 +116,7 @@ app.get('/collections', async (req, res) => {
 
   res.render('pages/collections', {
     ...defaults,
+    collection,
   });
 });
 
