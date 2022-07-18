@@ -2,11 +2,12 @@
   "name": "floema",
   "version": "1.0.0",
   "scripts": {
+    "type": "module",
     "backend:build": "node app.js",
     "backend:development": "nodemon app.js",
     "frontend:build": "webpack --progress --config webpack.config.build.js",
     "frontend:development": "webpack serve --progress --config webpack.config.development.js",
-    "start": "npm run development"
+    "start": "concurrently --kill-others \"npm run backend:development\" \"npm run frontend:development\""
   },
   "author": "Ashik Ahamed",
   "license": "ISC",
@@ -15,6 +16,7 @@
     "@squoosh/lib": "^0.4.0",
     "babel-loader": "^8.2.5",
     "clean-webpack-plugin": "^4.0.0",
+    "concurrently": "^7.2.2",
     "copy-webpack-plugin": "^11.0.0",
     "css-loader": "^6.7.1",
     "file-loader": "^6.2.0",
@@ -38,7 +40,11 @@
     "webpack-merge": "^5.8.0"
   },
   "dependencies": {
+    "@prismicio/client": "^6.6.1",
+    "@prismicio/helpers": "^2.3.2",
+    "dotenv": "^16.0.1",
     "express": "^4.18.1",
+    "node-fetch": "^3.2.8",
     "nodemon": "^2.0.19",
     "pug": "^3.0.2"
   }
