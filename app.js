@@ -48,8 +48,10 @@ app.set('views', path.join(__dirname, 'views'));
 app.locals.basedir = app.get('views');
 
 const handleRequest = async (api) => {
-  const [meta, home, about, { results: collections }] = await Promise.all([
+  const [meta, preloader, navigation, home, about, { results: collections }] = await Promise.all([
     api.getSingle('meta'),
+    api.getSingle('preloader'),
+    api.getSingle('navigation'),
     api.getSingle('home'),
     api.getSingle('about'),
     api.query(Prismic.Predicates.at('document.type', 'collection'), {
@@ -59,31 +61,37 @@ const handleRequest = async (api) => {
 
   const assets = [];
 
-  home.data.gallery.forEach((item) => {
-    assets.push(item.image.url);
-  });
+  // home.data.gallery.forEach((item) => {
+  //   assets.push(item.image.url);
+  // });
 
   about.data.gallery.forEach((item) => {
     assets.push(item.image.url);
   });
 
-  about.data.body.forEach((section) => {
-    if (section.slice_type === 'gallery') {
-      section.items.forEach((item) => {
-        assets.push(item.image.url);
-      });
-    }
-  });
+  // about.data.body.forEach((section) => {
+  //   if (section.slice_type === 'gallery') {
+  //     section.items.forEach((item) => {
+  //       assets.push(item.image.url);
+  //     });
+  //   }
+  // });
 
-  collections.forEach((collection) => {
-    collection.data.products.forEach((item) => {
-      assets.push(item.products_product.data.image.url);
-    });
-  });
+  // collections.forEach((collection) => {
+  //   collection.data.products.forEach((item) => {
+  //     assets.push(item.products_product.data.image.url);
+  //   });
+  // });
+  const gallery = about.data.gallery.forEach(item => {
+    console.log(item.image.url)
+  })
+  console.log(about.data.body)
 
   return {
     assets,
     meta,
+    preloader,
+    navigation,
     home,
     collections,
     about,
@@ -96,7 +104,6 @@ app.get('/', async (req, res) => {
 
   res.render('pages/home', {
     ...defaults,
-    home,
   });
 });
 
@@ -106,7 +113,6 @@ app.get('/about', async (req, res) => {
 
   res.render('pages/about', {
     ...defaults,
-    about,
   });
 });
 
@@ -116,7 +122,6 @@ app.get('/collections', async (req, res) => {
 
   res.render('pages/collections', {
     ...defaults,
-    collection,
   });
 });
 
