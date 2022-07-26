@@ -83,9 +83,9 @@ const handleRequest = async (api) => {
   //   });
   // });
   const gallery = about.data.gallery.forEach(item => {
-    console.log(item.image.url)
+    // console.log(item.image.url)
   })
-  console.log(about.data.body)
+  console.log(collections)
 
   return {
     assets,
@@ -128,11 +128,10 @@ app.get('/collections', async (req, res) => {
 app.get('/detail/:uid', async (req, res) => {
   const api = await initApi(req);
   const defaults = await handleRequest(api);
-
   const product = await api.getByUID('product', req.params.uid, {
     fetchLinks: 'collection.title',
   });
-
+  console.log(product.data)
   res.render('pages/detail', {
     ...defaults,
     product,

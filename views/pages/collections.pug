@@ -1,0 +1,25 @@
+extends ../base.pug
+
+block variables
+  - var template = 'collections'
+
+block content
+  .collections
+    .collections__wrapper
+      .collections__titles
+        each colleciton in collections
+          .colleciton__titles_title=colleciton.data.title
+
+      .collections__gallery
+        .collections__gallery__wrapper
+          each collection in collections
+            each product in collection.data.products
+              a.collecitons__gallery__link
+                figure.collections__gallery__media
+                  img.collections__gallery__image(alt=product.products_product.data.image.alt src=product.products_product.data.image.url)
+
+      .collection__content
+        each collection in collections
+          article.collecitons__article
+            h2.collections__article__title=collection.data.title
+            p.collections__article__description=collection.data.description
