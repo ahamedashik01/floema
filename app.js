@@ -1,11 +1,21 @@
 require('dotenv').config()
 
-const fetch = require('node-fetch')
-const path = require('path')
+const logger = require('morgan')
 const express = require('express')
+const bodyParser = require('body-parser')
+const methodOverride = require('method-override')
+const errorHandler = require('errorhandler')
+const fetch = require('node-fetch')
 
 const app = express();
+const path = require('path')
 const port = process.env.PORT || 8005;
+
+app.use(logger('dev'))
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ entended: false }))
+app.use(methodOverride())
+app.use(errorHandler())
 
 const Prismic = require('@prismicio/client');
 const PrismicH = require('@prismicio/helpers');
@@ -21,12 +31,17 @@ const initApi = (req) => {
 
 // Link Resolver
 const HandleLinkResolver = (doc) => {
-  // Define the url depending on the document type
-  //   if (doc.type === 'page') {
-  //     return '/page/' + doc.uid;
-  //   } else if (doc.type === 'blog_post') {
-  //     return '/blog/' + doc.uid;
-  //   }
+  if (doc.type === 'product') {
+    return `/detail/${doc.slug}`
+  }
+
+  if (doc.type === 'collections') {
+    return '/collections'
+  }
+
+  if (doc.tpe === 'about') {
+    return '/about'
+  }
 
   // Default to homepage
   return '/';
@@ -34,10 +49,12 @@ const HandleLinkResolver = (doc) => {
 
 // Middleware to inject prismic context
 app.use((req, res, next) => {
-  res.locals.ctx = {
-    endpoint: process.env.PRISMIC_ENDPOINT,
-    linkResolver: HandleLinkResolver,
-  };
+  res.locals.Link = HandleLinkResolver
+
+  res.locals.Numbers = index => {
+    return index === 0 ? 'One' : index === 1 ? 'Two' : index === 2 ? 'Three' : index === 3 ? 'Four' : '';
+  }
+
   res.locals.PrismicH = PrismicH;
 
   next();
@@ -83,9 +100,8 @@ const handleRequest = async (api) => {
   //   });
   // });
   const gallery = about.data.gallery.forEach(item => {
-    // console.log(item.image.url)
   })
-  console.log(collections)
+  // console.log(home.data.collection)
 
   return {
     assets,
@@ -131,7 +147,7 @@ app.get('/detail/:uid', async (req, res) => {
   const product = await api.getByUID('product', req.params.uid, {
     fetchLinks: 'collection.title',
   });
-  console.log(product.data)
+  // console.log(product.data)
   res.render('pages/detail', {
     ...defaults,
     product,
