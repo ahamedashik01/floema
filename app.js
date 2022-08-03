@@ -16,9 +16,11 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ entended: false }))
 app.use(methodOverride())
 app.use(errorHandler())
+app.use(express.static(path.join(__dirname, 'public')))
 
 const Prismic = require('@prismicio/client');
 const PrismicH = require('@prismicio/helpers');
+const { dirname } = require('path')
 
 // Initialize the prismic.io api
 const initApi = (req) => {
@@ -39,7 +41,7 @@ const HandleLinkResolver = (doc) => {
     return '/collections'
   }
 
-  if (doc.tpe === 'about') {
+  if (doc.type === 'about') {
     return '/about'
   }
 
