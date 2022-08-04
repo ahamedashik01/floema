@@ -100,14 +100,24 @@ module.exports = {
       },
 
       {
-        test: /\.(jpe?g|png|gif|svg|woff2?|fnt|webp)$/,
-        loader: 'file-loader',
-        options: {
-          name(file) {
-            return '[hash].[ext]'
-          }
-        }
+        test: /\.css$/i,
+        use: ['style-loader', 'css-loader'],
       },
+
+      {
+        test: /\.(woff|woff2|eot|ttf|otf)$/i,
+        type: 'asset/resource',
+      },
+
+      // {
+      //   test: /\.(jpe?g|png|gif|svg|woff2?|fnt|webp)$/,
+      //   loader: 'file-loader',
+      //   options: {
+      //     name(file) {
+      //       return '[hash].[ext]'
+      //     }
+      //   }
+      // },
 
       {
         test: /\.(jpe?g|png|gif|svg|webp)$/i,
