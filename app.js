@@ -103,7 +103,6 @@ const handleRequest = async (api) => {
   // });
   const gallery = about.data.gallery.forEach(item => {
   })
-  // console.log(home.data.collection)
 
   return {
     assets,
