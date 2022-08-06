@@ -6,6 +6,7 @@
 
 html {
   font-size: calc(100vw / 1920 * 10);
+  line-height: 1;
 }
 
 body {
@@ -25,4 +26,12 @@ a {
 
 img {
   vertical-align: middle;
+}
+
+button {
+  border: none;
+  background: none;
+  color: inherit;
+  outline: none;
+  cursor: pointer;
 }
