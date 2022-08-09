@@ -7,6 +7,10 @@
 html {
   font-size: calc(100vw / 1920 * 10);
   line-height: 1;
+
+  @include media('<=phone') {
+    font-size: calc(100vw / 750 * 10);
+  }
 }
 
 body {
@@ -14,7 +18,7 @@ body {
   font-family: $font-suisse-bp;
 
   @include media('<=phone') {
-    font-size: 100px;
+    // font-size: 100px;
   }
 }
 
@@ -34,4 +38,6 @@ button {
   color: inherit;
   outline: none;
   cursor: pointer;
+
+  @extend %description-16
 }
