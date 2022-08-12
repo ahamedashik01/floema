@@ -144,6 +144,8 @@
 }
 
 .detail__button {
+  @extend %description-14;
+
   align-items: center;
   bottom: 5rem;
   height: 6rem;
@@ -158,7 +160,6 @@
 
   @include media('<phone') {
     bottom: 12rem;
-    font-size: 3rem;
     height: 13rem;
     width: 26.8rem;
   }
