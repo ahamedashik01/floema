@@ -1,6 +1,13 @@
 import GSAP from 'gsap'
+import normalizeWheel from 'normalize-wheel'
 import Prefix from 'prefix'
+
 import each from 'lodash/each'
+import map from 'lodash/map'
+
+import Paragraph from 'animations/Paragraph'
+import Title from 'animations/Title'
+import Label from 'animations/Label'
 
 export default class Page {
   constructor({
@@ -10,7 +17,11 @@ export default class Page {
   }) {
     this.selector = element
     this.selectorChildren = {
-      ...elements
+      ...elements,
+
+      animationsTitles: '[data-animation="title"]',
+      animationsParagraphs: '[data-animation="paragraph"]',
+      animationsLabels: '[data-animation="label"]',
     }
 
     this.id = id
@@ -43,6 +54,40 @@ export default class Page {
         }
       }
     })
+
+    this.createAnimations()
+  }
+
+  createAnimations() {
+    this.animations = []
+
+    // Titles.
+    this.animationsTitles = map(this.elements.animationsTitles, element => {
+      return new Title({
+        element
+      })
+    })
+
+    this.animations.push(...this.animationsTitles)
+
+    // Paragraphs.
+    this.animationsParagraphs = map(this.elements.animationsParagraphs, element => {
+      return new Paragraph({
+        element
+      })
+    })
+
+    this.animations.push(...this.animationsParagraphs)
+
+    // Labels.
+    this.animationsLabels = map(this.elements.animationsLabels, element => {
+      return new Label({
+        element
+      })
+    })
+
+    this.animations.push(...this.animationsLabels)
+
   }
 
   show() {
@@ -77,15 +122,17 @@ export default class Page {
   }
 
   onMouseWheel(event) {
-    const { deltaY } = event
+    const { pixelY } = normalizeWheel(event)
 
-    this.scroll.target += deltaY
+    this.scroll.target += pixelY
   }
 
   onResize() {
     if (this.elements.wrapper) {
       this.scroll.limit = this.elements.wrapper.clientHeight - window.innerHeight
     }
+
+    each(this.animations, animation => animation.onResize())
   }
 
   update() {

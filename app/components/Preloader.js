@@ -36,6 +36,7 @@ export default class Preloader extends Component {
   }
 
   createLoader() {
+    this.onLand()
     each(this.elements.images, element => {
       element.onload = () => this.onAssetLoaded(element)
       element.src = element.getAttribute('data-src')
@@ -54,13 +55,10 @@ export default class Preloader extends Component {
     }
   }
 
-  onloaded() {
+  onLand() {
     return new Promise(resolve => {
       this.animateIn = GSAP.timeline({
-      })
-
-      this.animateOut = GSAP.timeline({
-        delay: 4
+        delay: 0.5
       })
 
       this.animateIn.from(this.elements.titleSpans, {
@@ -69,6 +67,19 @@ export default class Preloader extends Component {
         stagger: 0.1,
         y: '100%',
       })
+    })
+  }
+
+  onloaded() {
+    return new Promise(resolve => {
+      this.animateIn = GSAP.timeline({
+      })
+
+      this.animateOut = GSAP.timeline({
+        delay: 2.5
+      })
+
+
 
       this.animateOut.to(this.elements.titleSpans, {
         duration: 1.5,
