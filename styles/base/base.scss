@@ -21,6 +21,8 @@ body {
   @extend %cover;
   @extend %description-16;
 
+  // background: $color-contessa;
+  // color: $color-quarter-Spanish-white;
   font-family: $font-suisse-bp;
   position: fixed;
 
@@ -36,7 +38,13 @@ a {
 }
 
 img {
+  opacity: 0;
+  transition: opacity 0.4s ease;
   vertical-align: middle;
+
+  &.loaded {
+    opacity: 1;
+  }
 }
 
 button {

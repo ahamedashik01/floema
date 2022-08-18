@@ -1,8 +1,8 @@
 .collections {
   @extend %page;
 
-  background: $color-quicksand;
-  color: $color-quarter-Spanish-white
+  // background: $color-quicksand;
+  // color: $color-quarter-Spanish-white
 }
 
 .collections__wrapper {
@@ -50,7 +50,7 @@
   width: 44.7rem;
 }
 
-.collections__gallery__image {
+.collections__gallery__media__image {
   @extend %cover;
 
   object-fit: cover;
@@ -65,10 +65,10 @@
 }
 
 .collections__article {
+  position: absolute;
   bottom: 8rem;
   left: 8rem;
   opacity: 0;
-  position: absolute;
 
   &--active {
     opacity: 1;
@@ -91,11 +91,11 @@
   bottom: 5rem;
   display: flex;
   position: absolute;
-  // display: none;
+  display: none;
 
-  // @include media('<phone') {
-  //   display: block;
-  // }
+  @include media('<phone') {
+    display: flex;
+  }
 }
 
 .collections__mobile__item {
